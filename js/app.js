@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let randomHeight = Math.random() * 60;
     let obstacleBottom = randomHeight;
     const obstacle = document.createElement('div');
-    obstacle.classList.add('obstacle');
+    if (!isGameOver) obstacle.classList.add('obstacle');
     gameDisplay.appendChild(obstacle);
     obstacle.style.left = obstacleLeft + 'px';
     obstacle.style.bottom = obstacleBottom + 'px';
@@ -43,15 +43,22 @@ document.addEventListener('DOMContentLoaded', () => {
       obstacle.style.left = obstacleLeft + 'px';
 
       if (obstacleLeft === -60) {
-        clearInterval(timerID);
+        clearInterval(timerId);
         gameDisplay.removeChild(obstacle);
       }
-      if (birdBottom === 0) {
+      if (
+        (obstacleLeft > 200 &&
+          obstacleLeft < 280 &&
+          birdLeft === 220 &&
+          birdBottom < obstacleBottom + 153) ||
+        birdBottom === 0
+      ) {
         gameOver();
+        clearInterval(timerId);
       }
     }
     let timerId = setInterval(moveObstacle, 20);
-    setTimeout(generateObstacle, 3000);
+    if (!isGameOver) setTimeout(generateObstacle, 3000);
   }
   generateObstacle();
 
